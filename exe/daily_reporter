@@ -1,3 +1,5 @@
 #!/usr/bin/env ruby
 
 require "daily_reporter"
+
+DailyReporter::CLI.start
