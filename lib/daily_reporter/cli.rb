@@ -24,14 +24,18 @@ module DailyReporter
       today_str = (Time.now - 10000).strftime("%F")
       params = {since: today_str, until: today_str}
       summary = reports.summary('', params)
-      result = summary[0]["items"].each_with_object({}) do |item, hash|
-        title = item["title"]["time_entry"]
-        hour, minute = milliseconds_to_hour_and_minute(item["time"])
-        hash[title] = "#{hour}h #{minute}min"
-        if hour.zero?
-          puts "- #{title} (#{minute}min)" 
-        else
-          puts "- #{title} (#{hour}h#{minute}min)"
+      if summary[0].nil?
+        puts "no results"
+      else
+        result = summary[0]["items"].each_with_object({}) do |item, hash|
+          title = item["title"]["time_entry"]
+          hour, minute = milliseconds_to_hour_and_minute(item["time"])
+          hash[title] = "#{hour}h #{minute}min"
+          if hour.zero?
+            puts "- #{title} (#{minute}min)"
+          else
+            puts "- #{title} (#{hour}h#{minute}min)"
+          end
         end
       end
     end
@@ -41,6 +45,6 @@ module DailyReporter
         minute = msec/1000/60
         return minute.div(60), minute.modulo(60)
       end
-    end 
+    end
   end
 end
